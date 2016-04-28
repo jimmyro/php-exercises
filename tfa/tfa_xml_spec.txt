@@ -1,0 +1,58 @@
+TFA XML Specification
+
+ July 11, 2014
+ 
+ working structure:
+    <tfa>
+        <meta> date, volume, issue, plen </meta>
+        <masthead> names w/ position name and year </masthead>
+        <item> a standalone or article or feature
+            <meta> author, title, subtitle, page# w/ length, type </meta>
+            <body sub="true/false">
+                A series of paragraphs separated by blank lines
+ 
+                If the sub attribute is set to true, then the item body is divided into subsections:
+                <sub title="">
+                    ... text ...
+                </sub>
+            </body>
+        </item>
+        <section title="" subtitle=""> used to group related articles or features
+                                    considering adding meta section to these too
+            <item> ... </item>
+            <item> ... </item>
+        </section>
+    </tfa>
+ 
+ TO-DO:
+ unconventional features like Spectrum and Pop Perspective are not supported, might 
+ 	need special formatting?
+ no images, popout boxes, etc. etc. -- only text
+ 
+ MySQL considerations:
+ Article length typically lands around 6500-7500 characters (VARCHAR maxes at 65536).
+ 
+ You could have an 'issues' table for metadata, where 'issue-id' is comprised of the two-digit volume number followed by the two-digit issue number (in case we ever churn out more than 9 issues a year).  
+ NAME: issues
+ issue-id | date (M/Y) | volume | issue# | #pages | ... ...
+     0405 |      04/14 |      4 |      5 |     48 | 
+ 
+ All tables relevant to the issue are labeled '<issue-id>-<title>'.  We need one for the masthead that includes position name, position-holder name, and position-holder's class year (i.e. all the info on the printed masthead on page 1).  For the content table, we are assembling all the meta information attached directly to an item (author, title, etc.) as well as that item's section.  (I wish this were mongo!)
+ NAME: 0405-masthead
+ title           | name               | year | ... ...
+ Editor-in-Chief | Shubhankar Chhokra |   14 | 
+ 
+ NAME: 0405-content
+ article-id | author | year | title | subtitle | page | plen | wlen | type | sec-title | sec-subtitle | content
+     040501 | Ant... |   15 |  none |     none |    4 |    1 |    ? | ltte | Letter... |         none | .......
+ Where article-id is comprised of the issue-id followed by a two-digit counter.  'plen' is page length and 'wlen' is word count.  This layout doesn't support features, which are made up of titled subsections. (I REALLY wish this were mongo...)  For now they'll be serialized.
+ 
+ Script for XML parse and SQL entry is going to go something like this: 
+ 1. Initialize: 
+    Find <meta> under root <tfa>.  Add an entry to the issues table and create tables for the masthead and for article content.
+ 2. Masthead: 
+    For each <pos> entry in <masthead> under root <tfa>, add the relevant information to the masthead table. That's it.
+ 3. Content:
+    Create a new array of all items, both those under root <tfa> and under <section>s.  (This is a one-liner with Java's new XML library--is this easy in PHP too?)  
+    Iterate over <item>s:
+        Do if-else-none testing for each field and use necessary navigation method to check for section data

@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<!--links: CSS, Ajax scripts, ...
+			if volumes are set to 'all', disable issue menu
+		-->
+		<title>TFA Database Search</title>
+	</head>
+	
+	<body><div id="container">
+		<h1><em>The First Amendment</em> Database Search</h1>
+		
+		<form name="search" method="post" action="">
+			<!--Search elements-->
+			<fieldset id="location"><legend>Location</legend>
+				<label for="location_volume">Volume</label>
+					<select name="volume" id="location_volume">
+						<option value="all">all</option>
+						<!--dynamic-->
+					</select>
+				<label for="location_issue">Issue</label>
+					<select name="issue" id="location_issue">
+						<option value="all">all</option>
+						<!--dynamic-->
+					</select>
+			</fieldset>
+			<fieldset id="type"><legend>Type</legend>
+				<input type="checkbox" name="type[]" id="type_ltte" value="ltte"/>
+					<label for="type_ltte">LTTE</label>
+					<br/>
+				<input type="checkbox" name="type[]" id="type_article" value="article"/>
+					<label for="type_article">Article</label>
+					<br/>
+				<input type="checkbox" name="type[]" id="type_editorial" value="editorial"/>
+					<label for="type_editorial">Editorial</label>
+					<br/>
+				<input type="checkbox" name="type[]" id="type_column" value="column"/>
+					<label for="type_column">Column</label>
+					<br/>
+				<input type="checkbox" name="type[]" id="type_feature" value="feature"/>
+					<label for="type_feature">Feature</label>
+					<br/>
+			</fieldset>
+			<fieldset id="fields"><legend>Fields</legend>
+				<input type="checkbox" name="fields[]" id="fields_title" value="title"/>
+					<label for="fields_title">Title</label>
+					<br/>
+				<input type="checkbox" name="fields[]" id="fields_author" value="author"/>
+					<label for="fields_author">Author</label>
+					<br/>
+				<input type="checkbox" name="fields[]" id="fields_content" value="content"/>
+					<label for="fields_content">Content</label>
+					<br/>
+			</fieldset>
+			<fieldset id="search_terms"><legend>Search Terms</legend>
+				<label for="keyword">Keyword</label>
+					<input type="text" name="keyword" id="keyword"/>
+				<!--expand-->
+			</fieldset>
+		
+			<!--Submission elements-->
+			<br/>
+			<input type="hidden" name="_submit_check" value="1"/>
+			<input type="submit" name="submit" value="Submit"/>
+		</form>
+		
+		<div id="results">
+			<!--Print result table with PHP-->
+		</div>
+	</div></body>
+</html>
